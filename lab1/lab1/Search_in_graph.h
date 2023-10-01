@@ -27,5 +27,6 @@ public:
     void search_width();
     int create_close_rules();
     bool proved_rule(Module_rule module_rule_);
+    bool check_close_node(int node_num);
 
 };

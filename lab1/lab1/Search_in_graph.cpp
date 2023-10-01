@@ -4,13 +4,27 @@
 Search_in_graph::Search_in_graph(vector<Module_rule> module_rules_, Node target_node_, vector<Node> initial_nodes_, int count_nodes_) {
     this->module_rules = module_rules_;
     this->close_nodes = initial_nodes_; //мб и флаги им сменить
+    for (int i = 0; i < close_nodes.size(); i++)
+        close_nodes[i].flag = 1;
     target_vert = target_node_;
     count_nodes = count_nodes_;
 }
 
 void Search_in_graph::search_width() {
+    int iteration = 0;
+    int old_count_close_rul = 0;
     while (flag_solve && flag_not_solve) {
         int j = create_close_rules();
+ 
+        if (iteration > 0 && j == old_count_close_rul) {
+            cout << "на новой итерации решения не нашлось" << endl;
+            break;
+        }
+              cout << "текущий список модуль правил" << endl;
+        for (int i = 0; i < close_rules.size(); i++)
+            cout << close_rules[i] << " ";
+        cout << endl;
+        old_count_close_rul = j;
         if (flag_solve == 0) {
             cout << "решение найдено" << endl;
             return;
@@ -19,8 +33,9 @@ void Search_in_graph::search_width() {
             flag_not_solve = 0;
             cout << "нет решения" << endl;
         }
-        cout << "ищем закрытые правила" << endl;
 
+
+        iteration++;
 
     }
 
@@ -42,21 +57,26 @@ int Search_in_graph::create_close_rules() {
                 module_rules[counter_rules].mark = close;
 
                 close_rules.push_back(tmp_module_rules.front().rule_num);
-                close_nodes.push_back(tmp_module_rules.front().target_vertex);
-
+                if(check_close_node(tmp_module_rules.front().target_vertex) == false)//вершины пок анет в списке закр.
+                    close_nodes.push_back(tmp_module_rules.front().target_vertex);
+               
                 if (tmp_module_rules.front().target_vertex == target_vert.vert_num) //является целевой - нашли решение
                     flag_solve = 0; 
-            }
+            } 
+          
 
         }
         for (int i = 0; i < close_nodes.size(); i++)
             close_nodes[i].flag = 1;
         tmp_module_rules.erase(tmp_module_rules.begin());
         counter_rules++;
+
     }
-    
+
+    cout << endl;
     if (flag_solve == 0) {
-        cout << "нашли решение" << endl;
+        //cout << "нашли решение" << endl;
+        return close_rules.size();
     }
 
     return close_rules.size();
@@ -75,5 +95,15 @@ bool Search_in_graph::proved_rule(Module_rule module_rule_) {
     }
     if (coincidences == module_rule_.input_nodes.size())
         return true; //правило может считаться доказанным
+    return false;
+}
+
+
+bool Search_in_graph::check_close_node(int node_num) {
+    for (int i = 0; i < close_nodes.size(); i++)
+    {
+        if (close_nodes[i].vert_num == node_num)
+            return true;
+    }
     return false;
 }
