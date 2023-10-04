@@ -3,6 +3,7 @@
 #include"Module_rule.h"
 #include<iostream>
 
+//в ширину от данных к цели
 class Search_in_graph {
     vector<Module_rule> module_rules;
     vector<int> open_rules;
