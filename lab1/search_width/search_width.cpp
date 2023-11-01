@@ -36,7 +36,7 @@ int search_width::sample_search( Node current_node_) {
             }
 
 
-            if(!find_vert(tmp_edges.front().end_node))//ее пока нет в очереди
+            if(!find_vert(tmp_edges.front().end_node))//ее пока нет в очереди (а то вдруг другим путем еще придем)
                 open_nodes.push(tmp_edges.front().end_node);
             descendant++;
         }
@@ -53,23 +53,26 @@ void search_width::organization_search() {
         cout << "текущая очередь" << endl;
         show_queue();
 
-        if(!open_nodes.empty())
+        current_node = open_nodes.front();
+        /*if(!open_nodes.empty())
             current_node = open_nodes.front();
         else {
             cout << "нет решения" << endl;
             return;
-        }
+        }   */
         int j = sample_search(current_node); //число потомков
         close_nodes.push_back(current_node);
         open_nodes.pop();
-        if (flag_solve == 0) {
+          if (flag_solve == 0) {
             cout << "нашли решение" << endl;
             return;
         }
-        if (j == 0 && open_nodes.empty()) { //мб && flag_not_solve == 0
+        if (j == 0 && (open_nodes.empty() || current_node.vert_num == start_node.vert_num)) { //мб && flag_not_solve == 0
             cout << "нет решения" << endl;
             return;
         }
+      
+    
     }
 }
 

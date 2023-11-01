@@ -10,7 +10,7 @@ Search_in_graph::Search_in_graph(vector<Module_rule> module_rules_, Node target_
     count_nodes = count_nodes_;
 }
 
-void Search_in_graph::search_width() {
+void Search_in_graph::back_search() {
     int iteration = 0;
     int old_count_close_rul = 0;
     while (flag_solve && flag_not_solve) {
@@ -51,13 +51,13 @@ int Search_in_graph::create_close_rules() {
         //Module_rule curreny_module_rule;
         if (tmp_module_rules.front().mark == open) {
             //curreny_module_rule = module_rules.front();
-            if (proved_rule(tmp_module_rules.front()) == true) {
+            if (first_module_revealing_subgoal(tmp_module_rules.front()) == true) {
 
                 tmp_module_rules.front().mark = close;//метку ставим 
                 module_rules[counter_rules].mark = close;
 
                 close_rules.push_back(tmp_module_rules.front().rule_num);
-                if(check_close_node(tmp_module_rules.front().target_vertex) == false)//вершины пок анет в списке закр.
+                if(check_close_node(tmp_module_rules.front().target_vertex) == false)//вершины пока нет в списке закр.
                     close_nodes.push_back(tmp_module_rules.front().target_vertex);
                
                 if (tmp_module_rules.front().target_vertex == target_vert.vert_num) //является целевой - нашли решение
@@ -84,7 +84,7 @@ int Search_in_graph::create_close_rules() {
 
 }
 
-bool Search_in_graph::proved_rule(Module_rule module_rule_) {
+bool Search_in_graph::find_provide_rule(Module_rule module_rule_) {
     int coincidences = 0;
     for (int i = 0; i < module_rule_.input_nodes.size(); i++)
     {

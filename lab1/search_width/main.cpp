@@ -35,7 +35,7 @@ int main() {
     Edge edge79(7, 9);
 
     search_width search({ edge01, edge02 ,edge03 ,edge14 ,edge24 ,edge25 ,edge35 ,edge36, edge67 ,edge54 ,edge57 ,edge48 ,edge59 ,edge98, edge79 },
-        node0, node8, { node1, node2, node3, node4, node5, node6, node7, node8,node9 });
+        node6, node8, { node1, node2, node3, node4, node5, node6, node7, node8,node9 });
     search.organization_search();
 
     return 0;
