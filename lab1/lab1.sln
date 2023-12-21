@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "search_width", "search_widt
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "back_find_AndOr", "back_find_AndOr\back_find_AndOr.vcxproj", "{20BD3BAF-5BC8-4A5B-8BB3-341F88C26C0B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "unification", "unification\unification.vcxproj", "{F036109B-C570-4E77-9E4A-DC339FA1BBCD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -41,6 +43,14 @@ Global
 		{20BD3BAF-5BC8-4A5B-8BB3-341F88C26C0B}.Release|x64.Build.0 = Release|x64
 		{20BD3BAF-5BC8-4A5B-8BB3-341F88C26C0B}.Release|x86.ActiveCfg = Release|Win32
 		{20BD3BAF-5BC8-4A5B-8BB3-341F88C26C0B}.Release|x86.Build.0 = Release|Win32
+		{F036109B-C570-4E77-9E4A-DC339FA1BBCD}.Debug|x64.ActiveCfg = Debug|x64
+		{F036109B-C570-4E77-9E4A-DC339FA1BBCD}.Debug|x64.Build.0 = Debug|x64
+		{F036109B-C570-4E77-9E4A-DC339FA1BBCD}.Debug|x86.ActiveCfg = Debug|Win32
+		{F036109B-C570-4E77-9E4A-DC339FA1BBCD}.Debug|x86.Build.0 = Debug|Win32
+		{F036109B-C570-4E77-9E4A-DC339FA1BBCD}.Release|x64.ActiveCfg = Release|x64
+		{F036109B-C570-4E77-9E4A-DC339FA1BBCD}.Release|x64.Build.0 = Release|x64
+		{F036109B-C570-4E77-9E4A-DC339FA1BBCD}.Release|x86.ActiveCfg = Release|Win32
+		{F036109B-C570-4E77-9E4A-DC339FA1BBCD}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

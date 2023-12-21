@@ -3,8 +3,6 @@
 
 Search_in_graph::Search_in_graph(vector<Module_rule> module_rules_, Node target_node_, vector<Node> initial_nodes_, int count_nodes_) {
     this->module_rules = module_rules_;
-    //for (int i = 0; i < module_rules.size(); i++)
-    //    open_rules.push_back(module_rules[i].rule_num);
     this->close_nodes = initial_nodes_; 
     for (int i = 0; i < close_nodes.size(); i++)
         close_nodes[i].flag = 1;
@@ -34,13 +32,11 @@ Node Search_in_graph::get_node(int num) {
 int Search_in_graph::find_child() {
     int counter_rules = 0;//счетчик модужей раскрывающих текущую подцель
     int i = 0;
-    //vector<Module_rule> tmp_module_rules = module_rules;//я же не должен из основного списка удалять
     while (!module_rules.empty() && counter_rules == 0 && i < module_rules.size()) {//flag_solve == 1
-        cout << "ищем потомков" << endl;
+        //cout << "ищем потомков" << endl;
         if (module_rules[i].target_vertex == open_nodes.top().vert_num &&
             module_rules[i].mark == not_chosen && 
             !contain_in_forbiden_rule(module_rules[i])) {
-            //module_rules[i].mark = chosen;
             counter_rules++;
             if (open_rules.empty())
                 open_rules.push_back(module_rules[i].rule_num);//в список открытых правил его
@@ -56,10 +52,10 @@ int Search_in_graph::find_child() {
                     count_vert_in_close++;
                 }
                 if (count_vert_in_close == module_rules[i].input_nodes.size()) {//модул доказан удалим его из откр и добавим в закр
+                    cout << "нашли новое доказанное правило: " << module_rules[i].rule_num << endl;
                     count_vert_in_close = 0;
                     razmetka(module_rules[i]);
                     
-                    //вызываем метод разметки или вфаг разметки в 0
                 }
             }
 
@@ -92,58 +88,44 @@ void Search_in_graph::razmetka(Module_rule module_rule) {
             show_close_rules();
             show_close_nodes();
         }
-        else {//зачем доб в откр правила, если изначально оно есть
-            //не цель но по прежнему правило и верш изи головы в закр добавляем
-            if (find_provide_rule(module_rule)) {
-                module_rule.mark = chosen;
-                close_nodes.push_back(get_node(module_rule.target_vertex));
-                for (int i = 0; i < close_nodes.size(); i++)
-                    close_nodes[i].flag = 1;//добавленной вершине флаг в 1(доказана)
-                close_rules.push_back(module_rule.rule_num);
-                auto it = find(open_rules.begin(), open_rules.end(), module_rule.rule_num);
-                if (it != open_rules.end())
-                    open_rules.erase(it);//удвл правило из откр списка
-                open_nodes.pop();//удал верш из откр списка
+        else {
 
-                show_close_rules();
-                show_close_nodes();
+            module_rule.mark = chosen;
+            close_nodes.push_back(get_node(module_rule.target_vertex));
+            for (int i = 0; i < close_nodes.size(); i++)
+                close_nodes[i].flag = 1;//добавленной вершине флаг в 1(доказана)
+            close_rules.push_back(module_rule.rule_num);
+            auto it = find(open_rules.begin(), open_rules.end(), module_rule.rule_num);
+            if (it != open_rules.end())
+                open_rules.erase(it);//удвл правило из откр списка
+            open_nodes.pop();//удал верш из откр списка
 
-                cout << endl;
-                //for (int i = 0; i < open_rules.size(); i++) { //
-                    //Module_rule cur_rule = get_rule(open_rules[i]);
-                    Module_rule cur_rule = get_rule(open_rules.back());
-                    for (int j = 0; j < cur_rule.input_nodes.size(); j++) {
-                        if (module_rule.target_vertex == cur_rule.input_nodes[j].vert_num) { // выходную нашли во входных другого
-                            cur_rule.input_nodes[j].flag = 1;
-                            for (int k = 0; k < cur_rule.input_nodes.size(); k++) {//проверяется что все остальные вершины верхнего модуль правила закрыты
-                                if (cur_rule.input_nodes[k].flag != 1) {
-                                    flag = 0;
-                                    break;
-                                }
+            show_close_rules();
+            show_close_nodes();
+
+            cout << endl;
+                if (open_rules.empty()) {
+                    flag = 0;
+                    break;
+                }
+                Module_rule cur_rule = get_rule(open_rules.back());
+                for (int j = 0; j < cur_rule.input_nodes.size(); j++) {
+                    if (module_rule.target_vertex == cur_rule.input_nodes[j].vert_num) { // выходную нашли во входных другого
+                        cur_rule.input_nodes[j].flag = 1;
+                        for (int k = 0; k < cur_rule.input_nodes.size(); k++) {//проверяется что все остальные вершины верхнего модуль правила закрыты
+                            if (cur_rule.input_nodes[k].flag != 1) {
+                                flag = 0;
+                                break;
                             }
-
-                            //мы просто продолжаем крутиться в цикле и размечать выше если все покрывается закрытыми вершинами
-
-                            //if (find_provide_rule(module_rule)) {//это когда полное покрытие
-                            //    module_rule.mark = chosen;
-                            //    close_nodes.push_back(get_node(module_rule.target_vertex));
-                            //    for (int i = 0; i < close_nodes.size(); i++)
-                            //        close_nodes[i].flag = 1;//добавленной вершине флаг в 1(доказана)
-                            //    close_rules.push_back(module_rule.rule_num);
-                            //    auto it = find(open_rules.begin(), open_rules.end(), module_rule.rule_num);
-                            //    if (it != open_rules.end())
-                            //        open_rules.erase(it);//удвл правило из откр списка
-                            //    open_nodes.pop();//удал верш из откр списка
-                            //    flag = 1;//зачем?
-                            //}
-
                         }
 
-                    //} 
                     }
-                    module_rule = cur_rule;//???????????
+
+                //} 
+                }
+                module_rule = cur_rule;//???????????
                
-            }
+           // }
         }
     }
 
@@ -198,38 +180,26 @@ void Search_in_graph::back_search() {
     int old_count_close_rul = 0;
     int k = 0;
     while (flag_solve && flag_not_solve) {
-        cout << "идет основной цикл поиска" << endl;
+        //cout << "идет основной цикл поиска" << endl;
+        
         k = find_child();//метод потомков
 
         if (flag_solve == 0) {
             cout << "решение найдено" << endl;//вывод списка закр правил
             return;
         }
+
         
-        
+        if (k == 0 && (open_nodes.empty() || open_nodes.top().vert_num == target_vert.vert_num)) {
+            flag_not_solve = 0;
+            cout << "нет решения" << endl;
+        }
         if (k == 0 && !open_nodes.empty() && open_nodes.top().vert_num != target_vert.vert_num) // !=????
         {
             //метод возврата(бэктрекинг)
             backtraking();
 
         }
-        /* int j = create_close_rules();
-        if (iteration > 0 && j == old_count_close_rul) {
-            cout << "на новой итерации решения не нашлось" << endl;
-            break;
-        } 
-   
-        cout << "текущий список модуль правил" << endl;
-        for (int i = 0; i < close_rules.size(); i++)
-            cout << close_rules[i] << " ";
-        cout << endl;
-        old_count_close_rul = j;
-   */
-        if (k == 0 && (open_nodes.empty() && open_nodes.top().vert_num == target_vert.vert_num)) {
-            flag_not_solve = 0;
-            cout << "нет решения" << endl;
-        }
-
 
         iteration++;
 
@@ -240,18 +210,41 @@ void Search_in_graph::back_search() {
 void Search_in_graph::backtraking() {
     forbidden_rules.push_back( open_rules.back());
     Module_rule curr_rule = get_rule(open_rules.back());
+    int flag = 1;
     for (int m = 0; m < curr_rule.input_nodes.size(); m++) {
+        if (flag == 0)
+            break;
+
         if (open_nodes.top().vert_num == curr_rule.input_nodes[m].vert_num) {//тут важен порядок добавления в стек
+            forbidden_nodes.push_back(curr_rule.input_nodes[m].vert_num);
+            //open_nodes.pop();
+        }
+        for (int n = 0; n < curr_rule.input_nodes.size(); n++)
+            if(!forbidden_nodes.empty())
+            if (forbidden_nodes.back() == curr_rule.input_nodes[n].vert_num) {
+                flag = 0;
+                break;
+            }
+    }
+        while (open_nodes.top().vert_num != curr_rule.target_vertex) {
             open_nodes.pop();
         }
-        forbidden_nodes.push_back(curr_rule.input_nodes[m].vert_num);
-    }
+
+    
     open_rules.pop_back();
-    cout << "вызывается бэктрекинг список запрещенных правил" << endl;
+    
+    cout << "вызывается бэктрекинг список запрещенных вершин" << endl;
+    for (int i = 0; i < forbidden_nodes.size(); i++) {
+        cout << forbidden_nodes[i] << " ";
+    }
+   
+    cout<< endl << "список запрещенных правил" << endl;
     for (int i = 0; i < forbidden_rules.size(); i++)
     {
         cout << forbidden_rules[i] << " ";
     }
+    
+
     cout << endl;
 }
 
